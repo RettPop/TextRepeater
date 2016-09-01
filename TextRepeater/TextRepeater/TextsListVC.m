@@ -18,11 +18,25 @@ typedef BOOL PlayerMode;
     AVSpeechUtterance *_utter;
     NSUInteger _currItem;
     NSTimeInterval _textsGap;
+    CGFloat _speed;
+    CGFloat _pitch;
     BOOL _isPlaying;
 }
-@property(nonatomic, strong) IBOutlet UITableView *table;
+@property (nonatomic, strong) IBOutlet UITableView *table;
 @property (strong, nonatomic) IBOutlet UIButton *btnPlay;
 @property (strong, nonatomic) IBOutlet UITextView *currItemText;
+@property (strong, nonatomic) IBOutlet UILabel *lblPitchTitle;
+@property (strong, nonatomic) IBOutlet UIButton *btnPitchPlus;
+@property (strong, nonatomic) IBOutlet UIButton *btnPitchMinus;
+@property (strong, nonatomic) IBOutlet UILabel *lblDelayTitle;
+@property (strong, nonatomic) IBOutlet UIButton *btnDelayPlus;
+@property (strong, nonatomic) IBOutlet UIButton *btnDelayMinus;
+@property (strong, nonatomic) IBOutlet UILabel *lblSpeedTitle;
+@property (strong, nonatomic) IBOutlet UIButton *btnSpeedPlus;
+@property (strong, nonatomic) IBOutlet UIButton *btnSpeedMinus;
+
+@property (strong, nonatomic) IBOutlet UILabel *lblCurrentTextTitle;
+
 
 @end
 
@@ -100,6 +114,11 @@ typedef BOOL PlayerMode;
     
     [alert addAction:newAction];
     [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(IBAction)btbChangeParamTapped:(id)sender
+{
+
 }
 
 -(void)addNewText:(NSString *) text
@@ -189,13 +208,15 @@ typedef BOOL PlayerMode;
     [_utter setPreUtteranceDelay:1];
     [_utter setRate:.5f];
     [_utter setPitchMultiplier:1.2f];
+    [_utter setVolume:1.f];
     [_synth speakUtterance:_utter];
+    [_utter setPitchMultiplier:0.5f];
     [self setPlayingMode:YES];
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance
 {
-    [_currItemText setText:[utterance speechString]];
+//    [_currItemText setText:[utterance speechString]];
     NSInteger idx= [_textsArray indexOfObject:[utterance speechString]];
     if( idx >= 0 ) {
         [_table selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]
@@ -209,20 +230,17 @@ typedef BOOL PlayerMode;
 //- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didContinueSpeechUtterance:(AVSpeechUtterance *)utterance;
 //- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didCancelSpeechUtterance:(AVSpeechUtterance *)utterance;
 //
-//- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer willSpeakRangeOfSpeechString:(NSRange)characterRange utterance:(AVSpeechUtterance *)utterance;
+-(void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer willSpeakRangeOfSpeechString:(NSRange)characterRange utterance:(AVSpeechUtterance *)utterance
+{
+    NSMutableAttributedString *uttText = [[NSMutableAttributedString alloc] initWithString:[utterance speechString]];
+    [uttText addAttribute:NSBackgroundColorAttributeName value:[UIColor lightGrayColor] range:characterRange];
+    [uttText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:18] range:NSMakeRange(0, [uttText length])];
+    [_currItemText setAttributedText:uttText];
+    [_currItemText scrollRangeToVisible:characterRange];
+}
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance
 {
-//    _currItem++;
-//    if( _currItem >= [_textsArray count] ) {
-//        _currItem = 0;
-//    }
-//    
-//    [_table selectRowAtIndexPath:[NSIndexPath indexPathForRow:_currItem inSection:0] animated:YES scrollPosition:UITableViewScrollPositionMiddle];
-//
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((_textsGap/1000) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self speechText:[_textsArray objectAtIndex:_currItem]];
-//    });
     [_synth speakUtterance:utterance];
 }
 
