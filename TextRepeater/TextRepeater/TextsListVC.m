@@ -8,12 +8,16 @@
 
 #import "TextsListVC.h"
 #import "TextRepeaterConstants.h"
+#import "SpeechItem.h"
 
 typedef BOOL PlayerMode;
 
+#define kCurrentItemTextFont [UIFont systemFontOfSize:18]
+
+
 @interface TextsListVC ()
 {
-    NSMutableArray* _textsArray;
+    NSMutableArray<SpeechItem *>* _textsArray;
     AVSpeechSynthesizer *_synth;
     AVSpeechUtterance *_utter;
     NSUInteger _currItem;
@@ -82,13 +86,13 @@ typedef BOOL PlayerMode;
     if( YES == [self playerMode] ) {
         [self stopPlayer];
     }
-    else {
-        for (NSString* oneItem in _textsArray) {
-            [self speechText:oneItem];
-        }
-//        if( [_textsArray count] > 0 ) {
-//            [self speechText:[_textsArray objectAtIndex:_currItem]];
-//        }
+    else
+    {
+        [_textsArray enumerateObjectsUsingBlock:^(SpeechItem * _Nonnull oneItem, NSUInteger idx, BOOL * _Nonnull stop) {
+            if( [oneItem isSpokable] ) {
+                [self speakItem:oneItem];
+            }
+        }];
     }
 }
 
@@ -118,13 +122,13 @@ typedef BOOL PlayerMode;
 
 -(IBAction)btbChangeParamTapped:(id)sender
 {
-
+    // change speed, pitch and delay
 }
 
 -(void)addNewText:(NSString *) text
 {
     [_table beginUpdates];
-    [_textsArray addObject:text];
+    [_textsArray addObject:[SpeechItem itemWithText:text language:@"" isSpokable:YES]];
     NSIndexPath *newIndex = [NSIndexPath indexPathForRow:[_textsArray count]-1 inSection:0];
     [_table insertRowsAtIndexPaths:@[newIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
     [_table endUpdates];
@@ -144,13 +148,15 @@ typedef BOOL PlayerMode;
 
 -(UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CELL"];
+    ItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ItemCell"];
     if( nil == cell ) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CELL"];
+        cell = [[ItemCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ItemCell"];
     }
     
-    [[cell textLabel] setText:[_textsArray objectAtIndex:indexPath.row]];
-
+    SpeechItem *oneItem = [_textsArray objectAtIndex:indexPath.row];
+    [cell setCellText:[oneItem text] isActive:[oneItem isSpokable] isCurrent:NO];
+    [cell setDelegate:self];
+    [cell setCellIndexPath:indexPath];
     return cell;
 }
 
@@ -163,7 +169,8 @@ typedef BOOL PlayerMode;
     }
     
     _currItem = indexPath.row;
-    [self speechText:[_textsArray objectAtIndex:[indexPath row]]];
+    SpeechItem *oneItem = [_textsArray objectAtIndex:[indexPath row]];
+    [self speakItem:oneItem];
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -202,27 +209,32 @@ typedef BOOL PlayerMode;
     return _isPlaying;
 }
 
--(void)speechText:(NSString *) text
+-(void)speakItem:(SpeechItem *) item
 {
-    _utter = [[AVSpeechUtterance alloc] initWithString:text];
+    _utter = [[AVSpeechUtterance alloc] initWithString:[item text]];
     [_utter setPreUtteranceDelay:1];
     [_utter setRate:.5f];
-    [_utter setPitchMultiplier:1.2f];
+    [_utter setPitchMultiplier:1.f];
     [_utter setVolume:1.f];
     [_synth speakUtterance:_utter];
-    [_utter setPitchMultiplier:0.5f];
     [self setPlayingMode:YES];
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didStartSpeechUtterance:(AVSpeechUtterance *)utterance
 {
-//    [_currItemText setText:[utterance speechString]];
-    NSInteger idx= [_textsArray indexOfObject:[utterance speechString]];
-    if( idx >= 0 ) {
-        [_table selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]
-                            animated:YES
-                      scrollPosition:UITableViewScrollPositionMiddle];
-    }
+    // look for item with utterance's text and mark it as currently spokable
+    [_textsArray enumerateObjectsUsingBlock:^(SpeechItem * _Nonnull oneItem, NSUInteger idx, BOOL * _Nonnull stop)
+    {
+        if( [[oneItem text] isEqualToString:[utterance speechString]] )
+        {
+            ItemCell *cell = [_table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+            [_table selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]
+                                animated:YES
+                          scrollPosition:UITableViewScrollPositionMiddle];
+            [cell setIsCurrent:YES];
+            *stop = YES;
+        }
+    }];
 }
 
 //- (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance;
@@ -234,13 +246,41 @@ typedef BOOL PlayerMode;
 {
     NSMutableAttributedString *uttText = [[NSMutableAttributedString alloc] initWithString:[utterance speechString]];
     [uttText addAttribute:NSBackgroundColorAttributeName value:[UIColor lightGrayColor] range:characterRange];
-    [uttText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:18] range:NSMakeRange(0, [uttText length])];
+    [uttText addAttribute:NSFontAttributeName value:kCurrentItemTextFont range:NSMakeRange(0, [uttText length])];
     [_currItemText setAttributedText:uttText];
     [_currItemText scrollRangeToVisible:characterRange];
+    
+//    if( flag )
+//    {
+//        [synthesizer stopSpeakingAtBoundary:AVSpeechBoundaryWord];
+//        AVSpeechUtterance *newUtt = [utterance copy];
+//        [newUtt setPitchMultiplier:.5f];
+//        [synthesizer speakUtterance:newUtt];
+//        flag = NO;
+//    }
 }
 
 - (void)speechSynthesizer:(AVSpeechSynthesizer *)synthesizer didFinishSpeechUtterance:(AVSpeechUtterance *)utterance
 {
+    // look for item with utterance's text and remove currently spokable mark
+    [_textsArray enumerateObjectsUsingBlock:^(SpeechItem * _Nonnull oneItem, NSUInteger idx, BOOL * _Nonnull stop)
+     {
+         if( [[oneItem text] isEqualToString:[utterance speechString]] )
+         {
+             ItemCell *cell = [_table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+             [_table selectRowAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]
+                                 animated:YES
+                           scrollPosition:UITableViewScrollPositionMiddle];
+             [cell setIsCurrent:NO];
+             *stop = YES;
+         }
+     }];
+    //remove markup from current item text
+    NSMutableAttributedString *uttText = [[NSMutableAttributedString alloc] initWithString:[utterance speechString]];
+    [uttText addAttribute:NSFontAttributeName value:kCurrentItemTextFont range:NSMakeRange(0, [uttText length])];
+    [_currItemText setAttributedText:uttText];
+
+    // move finished utterance to the end of queue to repeat it again.
     [_synth speakUtterance:utterance];
 }
 
@@ -259,6 +299,13 @@ typedef BOOL PlayerMode;
         NSArray *texts = [NSKeyedUnarchiver unarchiveObjectWithData:data];
         _textsArray = [NSMutableArray arrayWithArray:texts];
     }
+}
+
+-(void)cell:(ItemCell*) cell activatityStateChangedTo:(BOOL)isActive
+{
+    SpeechItem *cellItem = [_textsArray objectAtIndex:[[cell cellIndexPath] row]];
+    [cellItem setIsSpokable:isActive];
+    [self saveSettings];
 }
 
 @end

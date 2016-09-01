@@ -24,6 +24,60 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="258"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="sectionIndexBackgroundColor" red="1" green="0.14192655379999999" blue="0.071115836739999994" alpha="1" colorSpace="calibratedRGB"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="ItemCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="ItemCell" id="FSo-Rf-ut0" customClass="ItemCell">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FSo-Rf-ut0" id="En9-v2-jVR">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Item text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FRE-mf-ufI">
+                                                    <rect key="frame" x="47" y="4" width="234" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🔇🔉" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LLC-OA-fId">
+                                                    <rect key="frame" x="235" y="-8" width="77" height="51"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="77" id="22x-db-QKT"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kV4-k5-TAj">
+                                                    <rect key="frame" x="8" y="1" width="28" height="41"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="28" id="DHM-jb-BSv"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                    <state key="normal" title="✅"/>
+                                                    <connections>
+                                                        <action selector="btnActivateTapped:" destination="FSo-Rf-ut0" eventType="touchUpInside" id="1ac-AS-iEr"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="LLC-OA-fId" firstAttribute="centerY" secondItem="En9-v2-jVR" secondAttribute="centerY" id="6DJ-BG-eIF"/>
+                                                <constraint firstAttribute="leadingMargin" secondItem="kV4-k5-TAj" secondAttribute="leading" id="AVI-NZ-erZ"/>
+                                                <constraint firstAttribute="bottom" secondItem="LLC-OA-fId" secondAttribute="bottom" id="DKM-ca-wtL"/>
+                                                <constraint firstItem="FRE-mf-ufI" firstAttribute="leading" secondItem="kV4-k5-TAj" secondAttribute="trailing" constant="11" id="Kkm-oL-e5d"/>
+                                                <constraint firstItem="kV4-k5-TAj" firstAttribute="centerY" secondItem="En9-v2-jVR" secondAttribute="centerY" id="Ux7-tw-Vjr"/>
+                                                <constraint firstItem="LLC-OA-fId" firstAttribute="leading" secondItem="FRE-mf-ufI" secondAttribute="trailing" constant="-46" id="WSD-Ba-Rs0"/>
+                                                <constraint firstItem="FRE-mf-ufI" firstAttribute="leading" secondItem="kV4-k5-TAj" secondAttribute="trailing" constant="11" id="XVQ-Hd-NnD"/>
+                                                <constraint firstItem="LLC-OA-fId" firstAttribute="top" secondItem="En9-v2-jVR" secondAttribute="topMargin" constant="-16" id="Xf8-UF-NcX"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="LLC-OA-fId" secondAttribute="trailing" id="lEG-hS-OHJ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="btnActivateItem" destination="kV4-k5-TAj" id="PhC-b8-gKc"/>
+                                            <outlet property="lblItemText" destination="FRE-mf-ufI" id="gRf-dW-VLI"/>
+                                            <outlet property="lblStatus" destination="LLC-OA-fId" id="tgz-oA-Quq"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8lT-eK-OPf">
                                 <rect key="frame" x="76" y="454" width="84" height="104"/>

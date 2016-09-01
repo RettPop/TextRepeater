@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AVFoundation/AVFoundation.h"
+#import "ItemCell.h"
 
-@interface TextsListVC : UIViewController<UITableViewDataSource, UITableViewDelegate, AVSpeechSynthesizerDelegate>
+@interface TextsListVC : UIViewController<UITableViewDataSource, UITableViewDelegate, AVSpeechSynthesizerDelegate, ItemCellDelegate>
 
 
 @end

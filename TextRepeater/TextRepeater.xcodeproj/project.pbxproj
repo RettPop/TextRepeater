@@ -16,6 +16,8 @@
 		7B164CAC1D7717B90097174A /* TextRepeaterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B164CAB1D7717B90097174A /* TextRepeaterTests.m */; };
 		7B164CB71D7717B90097174A /* TextRepeaterUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B164CB61D7717B90097174A /* TextRepeaterUITests.m */; };
 		7B164CC51D771D6C0097174A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B164CC41D771D6C0097174A /* AVFoundation.framework */; };
+		7B4240381D7869F900EA2771 /* ItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B4240371D7869F900EA2771 /* ItemCell.m */; };
+		7B42403B1D78808000EA2771 /* SpeechItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B42403A1D78808000EA2771 /* SpeechItem.m */; };
 		7BDC9E7B1D780A6A006A3327 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7B164CA21D7717B80097174A /* Info.plist */; };
 		7BDC9E7C1D780A6A006A3327 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7B164CA21D7717B80097174A /* Info.plist */; };
 /* End PBXBuildFile section */
@@ -55,6 +57,10 @@
 		7B164CB61D7717B90097174A /* TextRepeaterUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TextRepeaterUITests.m; sourceTree = "<group>"; };
 		7B164CB81D7717B90097174A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B164CC41D771D6C0097174A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		7B4240361D7869F900EA2771 /* ItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemCell.h; sourceTree = "<group>"; };
+		7B4240371D7869F900EA2771 /* ItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ItemCell.m; sourceTree = "<group>"; };
+		7B4240391D78808000EA2771 /* SpeechItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpeechItem.h; sourceTree = "<group>"; };
+		7B42403A1D78808000EA2771 /* SpeechItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpeechItem.m; sourceTree = "<group>"; };
 		7BDC9E791D7747BD006A3327 /* TextRepeaterConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextRepeaterConstants.h; sourceTree = "<group>"; };
 		7BDC9E7D1D780A9F006A3327 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,12 +120,16 @@
 				7B164C951D7717B80097174A /* AppDelegate.m */,
 				7B164C971D7717B80097174A /* TextsListVC.h */,
 				7B164C981D7717B80097174A /* TextsListVC.m */,
+				7B4240361D7869F900EA2771 /* ItemCell.h */,
+				7B4240371D7869F900EA2771 /* ItemCell.m */,
 				7B164C9A1D7717B80097174A /* Main.storyboard */,
 				7B164C9D1D7717B80097174A /* Assets.xcassets */,
 				7B164C9F1D7717B80097174A /* LaunchScreen.storyboard */,
 				7B164CA21D7717B80097174A /* Info.plist */,
 				7B164C911D7717B80097174A /* Supporting Files */,
 				7BDC9E7D1D780A9F006A3327 /* PrefixHeader.pch */,
+				7B4240391D78808000EA2771 /* SpeechItem.h */,
+				7B42403A1D78808000EA2771 /* SpeechItem.m */,
 			);
 			path = TextRepeater;
 			sourceTree = "<group>";
@@ -287,6 +297,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B42403B1D78808000EA2771 /* SpeechItem.m in Sources */,
+				7B4240381D7869F900EA2771 /* ItemCell.m in Sources */,
 				7B164C991D7717B80097174A /* TextsListVC.m in Sources */,
 				7B164C961D7717B80097174A /* AppDelegate.m in Sources */,
 				7B164C931D7717B80097174A /* main.m in Sources */,
